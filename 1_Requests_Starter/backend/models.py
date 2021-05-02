@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 
 database_name = "bookshelf"
-database_path = "postgres://{}/{}".format('localhost:5432', database_name)
+database_path = "postgres://{}:{}@{}/{}".format('student','student','localhost:5432', database_name)
 
 db = SQLAlchemy()
 
@@ -47,6 +47,7 @@ class Book(db.Model):
     db.session.delete(self)
     db.session.commit()
 
+  @property
   def format(self):
     return {
       'id': self.id,
@@ -54,3 +55,4 @@ class Book(db.Model):
       'author': self.author,
       'rating': self.rating,
     }
+

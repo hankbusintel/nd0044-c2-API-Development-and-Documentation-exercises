@@ -27,12 +27,23 @@ def create_app(test_config=None):
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
 
-  # @TODO: Write a route that retrivies all books, paginated. 
-  #         You can use the constant above to paginate by eight books.
-  #         If you decide to change the number of books per page,
-  #         update the frontend to handle additional books in the styling and pagination
-  #         Response body keys: 'success', 'books' and 'total_books'
-  # TEST: When completed, the webpage will display books including title, author, and rating shown as stars
+  @app.route('/')
+  def hello():
+    return 'Hello World'
+
+  @app.route('/books')
+  def getbooks():
+    page = request.args.get('page',1,type=int)
+    start=(page-1)*8
+    end = start+8
+    books = Book.query.all()
+    data = [book.format for book in books]
+
+    return jsonify({
+      'success':True,
+      'books':data[start:end],
+      'total_books':len(data)
+    })
 
 
   
@@ -58,4 +69,6 @@ def create_app(test_config=None):
   
   return app
 
-    
+if __name__ == "__main__":
+  app = create_app()
+  app.run()
